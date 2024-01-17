@@ -2,9 +2,8 @@
 const {
   Model
 } = require('sequelize');
-const TableNames = require("../helpers/tableNames");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Difficulties extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,14 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({ // Like Laravel fillable field
-    name: DataTypes.STRING,
-    firstLastName: DataTypes.STRING,
-    email: DataTypes.STRING
+  Difficulties.init({
+    name: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'User',
-    tableName: TableNames.user
+    modelName: 'Difficulties',
   });
-  return User;
+  return Difficulties;
 };

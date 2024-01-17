@@ -8,12 +8,15 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
-      firstName: {
+      name: {
         type: Sequelize.STRING
       },
-      lastName: {
+      firstLastName: {
+        type: Sequelize.STRING
+      },
+      secondLastName: {
         type: Sequelize.STRING
       },
       email: {

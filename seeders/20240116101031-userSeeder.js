@@ -1,18 +1,12 @@
 'use strict';
 
 const TableNames = require("../helpers/tableNames");
+const SeedData = require("../helpers/seedData");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    let users = [
-      {
-        firstName: 'Johnnas Doe',
-        lastName: false,
-        email: 'email@any.com',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
+    let users = SeedData.users;
 
     await queryInterface.bulkInsert(TableNames.user, users, {});
   },

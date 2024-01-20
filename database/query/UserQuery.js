@@ -1,8 +1,9 @@
 require('dotenv').config()
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op, QueryTypes} = require('sequelize');
 const models = require('../../models');
 const SequelizeConnection = require("../ConexionSequelize");
 const sequelizeConnection = new SequelizeConnection();
+const tableNames = require('../../helpers/tableNames');
 
 class UserQuery {
     static find = async (id) => {
@@ -14,6 +15,20 @@ class UserQuery {
 
         if (!result) {
             throw new Error();
+        }
+
+        return result;
+    }
+
+    static emailExists = async (email) => {
+        sequelizeConnection.connect();
+
+        let result = await models.User.findOne({where: {email: email}});
+
+        sequelizeConnection.disconnect();
+
+        if (!result) {
+            throw new Error('Email not exists.');
         }
 
         return result;

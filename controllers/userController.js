@@ -11,15 +11,16 @@ class UserController {
     };
 
     static save = async (req, res = response) => {
-        // let requestIsValid =
-
         let user = await UserQuery.save(req.body);
         let response = Common.getStandardResponse(200, user);
 
         return res.status(200).json(response);
     };
-}
 
+    // static emailExists = async (email = '') => {
+    //     return await UserQuery.emailExists(email);
+    // }
+}
 
 module.exports = {
     UserController

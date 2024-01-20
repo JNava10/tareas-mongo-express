@@ -23,17 +23,17 @@ module.exports = {
           key: 'id'
         },
       },
+      estimatedHours: {
+        type: Sequelize.INTEGER
+      },
       workedHours: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       realizedPercentage: {
-        allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.INTEGER
       },
       isEnded: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
       },
     });
   },

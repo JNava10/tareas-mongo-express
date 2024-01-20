@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const TableNames = require("../helpers/tableNames");
 module.exports = (sequelize, DataTypes) => {
   class Task extends Model {
     /**
@@ -10,14 +11,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsTo(models.Difficulty)
     }
   }
   Task.init({
-    name: DataTypes.STRING
+    description: DataTypes.STRING,
+    difficulty: DataTypes.STRING,
+    workedHours: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
+    realizedPercentage: DataTypes.DATE,
+    isEnded: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'Task',
+    tableName: TableNames.task,
+    paranoid: true
   });
   return Task;
 };

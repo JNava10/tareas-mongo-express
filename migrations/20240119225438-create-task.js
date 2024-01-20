@@ -1,28 +1,15 @@
 'use strict';
-const TableNames = require("../helpers/tableNames");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(TableNames.user, {
+    await queryInterface.createTable('Tasks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT
+        type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
-      },
-      firstLastName: {
-        type: Sequelize.STRING
-      },
-      secondLastName: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      password: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -36,6 +23,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable(TableNames.user, {cascade: true});
+    await queryInterface.dropTable('Tasks');
   }
 };

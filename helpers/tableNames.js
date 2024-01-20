@@ -1,6 +1,15 @@
-class TableNames {
-    static user = 'users';
-    static comment = 'comments';
-}
+const user = 'users';
+const difficulty = 'difficulties';
+const userTask = 'user_tasks';
+const userRole = 'user_roles';
+const role = 'roles';
+const task = 'tasks';
 
-module.exports = TableNames
+module.exports = {
+    user,
+    difficulty,
+    userTask,
+    userRole,
+    role,
+    task
+}

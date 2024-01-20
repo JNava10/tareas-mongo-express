@@ -3,7 +3,7 @@ const TableNames = require("../helpers/tableNames");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserTasks', {
+    await queryInterface.createTable(TableNames.task, {
       task: {
         allowNull: false,
         primaryKey: true,

@@ -4,7 +4,7 @@ const TableNames = require("../helpers/tableNames");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(TableNames.rol, {
+    await queryInterface.createTable(TableNames.role, {
       id: {
         allowNull: false,
         autoIncrement: true,

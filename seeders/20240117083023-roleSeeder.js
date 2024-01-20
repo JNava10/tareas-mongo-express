@@ -1,12 +1,12 @@
 'use strict';
 
 const TableNames = require("../helpers/tableNames");
-const SeedData = require("../helpers/seedData");
+const seedData = require("../helpers/seedData");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    let roles = SeedData.roles;
+    let roles = seedData.roles;
 
     await queryInterface.bulkInsert(TableNames.role, roles, {});
   },

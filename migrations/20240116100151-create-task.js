@@ -1,42 +1,43 @@
 'use strict';
 const TableNames = require("../helpers/tableNames");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable(TableNames.comment, {
+    await queryInterface.createTable(TableNames.task, {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
-      comment: {
+      description: {
         type: Sequelize.STRING
       },
-      valoration: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      userId: {
-        type: Sequelize.DataTypes.INTEGER,
+      difficulty: {
+        type: Sequelize.BIGINT,
         references: {
           model: {
-            tableName: TableNames.user
+            tableName: TableNames.difficulty
           },
           key: 'id'
         },
+      },
+      workedHours: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      realizedPercentage: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      isEnded: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable(TableNames.task);
   }
 };

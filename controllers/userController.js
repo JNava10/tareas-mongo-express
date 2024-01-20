@@ -4,7 +4,7 @@ const UserQuery = require("../database/query/UserQuery");
 
 class UserController {
     static find = async (req, res = response) => {
-        let user = await UserQuery.find(req.body.id);
+        let user = await UserQuery.checkLoginCredentials(req.body.email, req.body.password);
         let response = Common.getStandardResponse(200, user);
 
         return res.status(200).json(response);

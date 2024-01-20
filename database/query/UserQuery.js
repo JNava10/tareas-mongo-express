@@ -20,7 +20,28 @@ class UserQuery {
         return result;
     }
 
-    static emailExists = async (email) => {
+    static checkLoginCredentials = async (email, password) => {
+        sequelizeConnection.connect();
+
+        let result = await models.User.findOne(
+            {
+                where: [
+                    {email: email},
+                    {password: password}
+                ]
+            }
+        );
+
+        sequelizeConnection.disconnect();
+
+        if (!result) {
+            throw new Error('Credenciales no validas');
+        }
+
+        return result;
+    }
+
+    static emailExists = async (email, password) => {
         sequelizeConnection.connect();
 
         let result = await models.User.findOne({where: {email: email}});

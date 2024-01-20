@@ -1,6 +1,7 @@
 const {body} = require('express-validator');
 const Validator = require("../../helpers/validator");
 const {UserController} = require("../../controllers/userController");
+const {validateToken} = require("../validateToken");
 
 // Range constants //
 
@@ -40,17 +41,28 @@ const secondLastnameFormat = [
     body('secondLastName').exists(),
 ];
 
+const tokenValidation = (req, res, next) => {
+    return validateToken(req, res, next)
+}
+
 // Body validations //
 
-const userInsertFields = [
+const userInsert = [
     ...nameFormat,
     ...emailFormat,
     ...passwordFormat,
     ...firstLastnameFormat,
     ...secondLastnameFormat,
-    Validator.validateFields
+    Validator.validateFields,
+    tokenValidation
+];
+
+const userLogin = [
+    ...emailFormat,
+    ...passwordFormat
 ];
 
 module.exports = {
-    userInsertFields
+    userInsert,
+    userLogin
 }

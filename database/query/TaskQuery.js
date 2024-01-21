@@ -1,3 +1,4 @@
+
 require('dotenv').config()
 const { Sequelize, Op, QueryTypes} = require('sequelize');
 const models = require('../../models');
@@ -40,7 +41,7 @@ class UserQuery {
         try {
             sequelizeConnection.connect();
 
-            let isCreated = models.task.create(req.body);
+            let isCreated = models.Task.create(req.body);
 
             sequelizeConnection.disconnect();
 
@@ -54,12 +55,12 @@ class UserQuery {
         }
     };
 
-    static modify = async (req, res = response) => {
+    static modify = async (requestBody) => {
         try {
             sequelizeConnection.connect();
 
-            let updated = await models.task.update(req.body, {
-                where: {id: req.body.id}
+            let updated = await models.Task.update(requestBody, {
+                where: {id: requestBody.id}
             });
 
             sequelizeConnection.disconnect();
@@ -70,17 +71,16 @@ class UserQuery {
 
             return updated;
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
-            return res.status(200).json(response)
+            return error.message
         }
     };
 
-    static delete = async (req, res = response) => {
+    static delete = async (requestBody) => {
         try {
             sequelizeConnection.connect();
 
-            let deleted = await models.task.destroy(req.body, {
-                where: {id: req.body.id}
+            let deleted = await models.Task.destroy({
+                where: {id: requestBody.id}
             });
 
             sequelizeConnection.disconnect();
@@ -91,32 +91,13 @@ class UserQuery {
 
             return deleted;
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
-            return res.status(200).json(response)
+            return error.message
         }
     };
+
+    // static checkIfDifficultyExists = (requestBody) => {
+    //
+    // };
 }
 
 module.exports = UserQuery;
-//
-// registrarUsuario = async(body) => {
-//     let resultado = 0;
-//     this.conectar();
-//     try{
-//         // const usuarioNuevo = new Persona(body); //Con esto añade los timeStamps.
-//         // await usuarioNuevo.save();
-//         const usuarioNuevo = await models.User.create(body);
-//         resultado = 1; // Asume que la inserción fue exitosa
-//     } catch (error) {
-//         if (error instanceof Sequelize.UniqueConstraintError) {
-//             console.log(`El id ${body.id} ya existe en la base de datos.`);
-//         } else {
-//             console.log('Ocurrió un error desconocido: ', error);
-//         }
-//         throw error;
-//     } finally {
-//         this.desconectar();
-//     }
-//     return resultado;
-// }
-

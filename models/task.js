@@ -12,16 +12,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.Difficulty)
+      this.belongsTo(models.User)
     }
   }
   Task.init({
     description: DataTypes.STRING,
     difficulty: DataTypes.STRING,
+    estimatedHours: DataTypes.INTEGER,
     workedHours: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    realizedPercentage: DataTypes.DATE,
+    realizedPercentage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
     isEnded: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

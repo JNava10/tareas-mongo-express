@@ -2,6 +2,7 @@ const {body} = require('express-validator');
 const Validator = require("../../helpers/validator");
 const {UserController} = require("../../controllers/userController");
 const {validateToken} = require("../validateToken");
+const TaskQuery = require("../../database/query/TaskQuery");
 
 // Field format validations //
 
@@ -18,7 +19,7 @@ const descriptionFormat = [
 const difficultyFormat = [
     body('difficulty', `La dificultad debe tener un formato adecuado.`).isString(),
     body('difficulty', 'No se ha introducido la dificultad.').exists(),
-]
+];
 
 const estimatedHoursFormat = [
     body('estimatedHours', 'La horas estimadas deben ser un numero.').isInt(),
@@ -35,7 +36,11 @@ const realizedPercentageFormat = [
     body('realizedPercentage').exists(),
 ];
 
-// Body validations //
+// Value validations //
+
+const difficultyExists = () => {
+    body('difficulty').custom(TaskQuery.checkIfDifficultyExists)
+}
 
 // const taskInsert = [
 //     ...nameFormat,

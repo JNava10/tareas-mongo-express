@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.hasMany(models.Task, {
+        foreignKey: 'user',
+        as: 'userTasks'
+      })
     }
   }
   User.init({ // Like Laravel fillable field
@@ -23,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-    tableName: TableNames.user
+    tableName: TableNames.user,
+    paranoid: true
   });
   return User;
 };

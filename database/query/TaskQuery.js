@@ -23,7 +23,7 @@ class UserQuery {
         return result;
     }
 
-    static save = async (requestBody) => {
+    static create = async (requestBody) => {
         sequelizeConnection.connect();
 
         let isCreated = await models.Task.create(requestBody);
@@ -36,24 +36,6 @@ class UserQuery {
 
         return isCreated;
     }
-
-    static create = async (req, res = response) => {
-        try {
-            sequelizeConnection.connect();
-
-            let isCreated = models.Task.create(req.body);
-
-            sequelizeConnection.disconnect();
-
-            if (!isCreated) {
-                throw new Error(isCreated);
-            }
-
-            return isCreated;
-        } catch (error) {
-            return error.message
-        }
-    };
 
     static modify = async (requestBody) => {
         try {

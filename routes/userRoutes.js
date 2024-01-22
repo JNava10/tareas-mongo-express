@@ -12,7 +12,13 @@ router.route('/user')
     .get(middleware.middleware, UserController.find)
     .post([
         userValidation.userInsert
-    ], UserController.save);
+    ], UserController.save)
+    .put([
+        userValidation.userUpdate
+    ], UserController.modify)
+    .delete([
+
+    ], UserController.delete)
 
 router.post('/login', userValidation.userLogin, AuthController.login);
 // .get(middleware.test, TaskController.find)

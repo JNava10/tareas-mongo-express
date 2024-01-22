@@ -2,6 +2,7 @@ const {body} = require('express-validator');
 const Validator = require("../../helpers/validator");
 const {UserController} = require("../../controllers/userController");
 const {validateToken} = require("../validateToken");
+const {checkIfUserExists} = require("./custom/userExists");
 
 // Range constants //
 
@@ -45,7 +46,17 @@ const tokenValidation = (req, res, next) => {
     return validateToken(req, res, next)
 }
 
-// Body validations //
+// Custom validations //
+
+const userExists = [
+    body('id', 'El usuario no existe.').custom(checkIfUserExists)
+]
+
+const userNotExists = [
+    body('id', 'El usuario no existe.').not().custom(checkIfUserExists)
+]
+
+// Request validations //
 
 const userInsert = [
     ...nameFormat,
@@ -62,7 +73,18 @@ const userLogin = [
     ...passwordFormat
 ];
 
+const userUpdate = [
+    ...userNotExists
+]
+
+const userDelete = [
+    ...userNotExists
+]
+
+
 module.exports = {
     userInsert,
-    userLogin
+    userLogin,
+    userUpdate,
+    userDelete
 }

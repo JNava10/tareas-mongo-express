@@ -15,7 +15,7 @@ class TaskController {
 
     static save = async (req, res = response) => {
         try {
-            let insertedItem = await TaskQuery.save(req.body);
+            let insertedItem = await TaskQuery.create(req.body);
             let response = Common.getStandardResponse(200, {savedId: insertedItem.id});
 
             return res.status(200).json(response);

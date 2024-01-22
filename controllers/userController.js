@@ -6,19 +6,33 @@ const bcrypt = require("bcrypt");
 
 class UserController {
     static find = async (req, res = response) => {
-        let user = await UserQuery.checkLoginCredentials(req.body.email, req.body.password);
-        let response = Common.getStandardResponse(200, user);
+        let user = await UserQuery.find(req.body.id);
 
-        return res.status(200).json(response);
+        if (!user) {
+            return res.status(404).json(
+                Common.getStandardResponse(404)
+            );
+        }
+
+        return res.status(200).json(
+            Common.getStandardResponse(200, user)
+        );
     };
 
     static save = async (req, res = response) => {
         req.body = await UserController.hashPasswordIfExists(req.body);
 
         let user = await UserQuery.save(req.body);
-        let response = Common.getStandardResponse(200, user);
 
-        return res.status(200).json(response);
+        if (!user) {
+            return res.status(400).json(
+                Common.getStandardResponse(400, user)
+            );
+        }
+
+        return res.status(200).json(
+            Common.getStandardResponse(200, user)
+        );
     };
 
     static modify = async (req, res = response) => {
@@ -49,6 +63,16 @@ class UserController {
 
     static delete = async (req, res = response) => {
         try {
+            let user = await UserQuery.idExists(req.body.id);
+
+            console.log(user)
+
+            if (!user) {
+                return res.status(404).json(
+                    Common.getStandardResponse(404)
+                );
+            }
+
             let itemDeleted =  await UserQuery.delete(req.body)
             let isDeleted = itemDeleted === 1;
 
@@ -60,10 +84,6 @@ class UserController {
             return res.status(200).json(response)
         }
     };
-
-    // static emailExists = async (email = '') => {
-    //     return await UserQuery.emailExists(email);
-    // }
 }
 
 module.exports = {

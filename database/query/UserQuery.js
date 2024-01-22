@@ -4,6 +4,9 @@ const models = require('../../models');
 const SequelizeConnection = require("../ConexionSequelize");
 const tableNames = require('../../helpers/tableNames');
 const {response} = require("express");
+const bcrypt = require("bcrypt");
+const {generarJWT: generateToken} = require("../../helpers/generate_jwt");
+const {Common} = require("../../helpers/common");
 
 class UserQuery {
     static find = async (id) => {
@@ -16,13 +19,13 @@ class UserQuery {
         sequelizeConnection.disconnect();
 
         if (!result) {
-            throw new Error();
+            return false;
         }
 
         return result;
     }
 
-    static exists = async (id) => {
+    static idExists = async (id) => {
         const sequelizeConnection = new SequelizeConnection();
 
         try {
@@ -40,29 +43,18 @@ class UserQuery {
         }
     }
 
-    static checkLoginCredentials = async (email, password) => {
-        const sequelizeConnection = new SequelizeConnection();
-        sequelizeConnection.connect();
+    static checkLoginCredentials = async (email, password, user) => {
+        console.log(user)
+        let passwordIsValid = await bcrypt.compare(password, user.password);
 
-        let result = await models.User.findOne(
-            {
-                where: [
-                    {email: email},
-                    {password: password}
-                ]
-            }
-        );
-
-        sequelizeConnection.disconnect();
-
-        if (!result) {
-            throw new Error('Credenciales no validas');
+        if (passwordIsValid) {
+            return generateToken(user.id)
+        } else {
+            return false;
         }
-
-        return result;
     }
 
-    static emailExists = async (email, password) => {
+    static emailExists = async (email) => {
         const sequelizeConnection = new SequelizeConnection();
         sequelizeConnection.connect();
 
@@ -71,13 +63,16 @@ class UserQuery {
         sequelizeConnection.disconnect();
 
         if (!result) {
-            throw new Error('Email not exists.');
+            return false;
         }
 
         return result;
     }
 
     static save = async (requestBody) => {
+        let userExists = await UserQuery.emailExists(requestBody.email);
+        if (userExists) return false;
+
         const sequelizeConnection = new SequelizeConnection();
         sequelizeConnection.connect();
 

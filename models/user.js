@@ -1,33 +1,14 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-const TableNames = require("../helpers/tableNames");
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      this.hasMany(models.Task, {
-        foreignKey: 'user',
-        as: 'userTasks'
-      })
-    }
-  }
-  User.init({ // Like Laravel fillable field
-    name: DataTypes.STRING,
-    firstLastName: DataTypes.STRING,
-    secondLastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-  }, {
-    sequelize,
-    modelName: 'User',
-    tableName: TableNames.user,
-    paranoid: true
-  });
-  return User;
-};
+const mongoose = require('mongoose');
+const collectionNames = require('../helpers/collectionNames');
+
+const userSchema = new mongoose.Schema({
+    email: { type: String, unique: true },
+    password: { type: String },
+    name: { type: String },
+    surname: { type: String },
+    secondSurname: { type: String },
+}, { collection: collectionNames.user , versionKey: false });
+
+const UserModel = mongoose.model('User', userSchema);
+
+module.exports = UserModel;

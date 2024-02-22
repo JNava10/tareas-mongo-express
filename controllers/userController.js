@@ -32,17 +32,13 @@ class UserController {
     static save = async (req, res = response) => {
         req.body = await UserController.hashPasswordIfExists(req.body);
 
-        let user = await UserQuery.save(req.body);
+        let user = await UserQuery.createUser(req);
 
         if (!user) {
-            return res.status(400).json(
-                Common.getStandardResponse(400, user)
-            );
+            return res.status(400).json("No se ha creado el usuario.");
         }
 
-        return res.status(200).json(
-            Common.getStandardResponse(200, user)
-        );
+        return res.status(200).json(user);
     };
 
     static modify = async (req, res = response) => {

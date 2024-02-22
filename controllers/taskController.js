@@ -1,6 +1,5 @@
 const {response, request} = require('express');
 const {Common} = require("../helpers/common");
-const models = require('../models/index.js');
 const TaskQuery = require("../database/query/TaskQuery");
 
 class TaskController {
@@ -8,7 +7,7 @@ class TaskController {
         try {
             return await TaskQuery.find(req.params.id);
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
+            let response = Common.getStandardResponse(W500, error)
             return res.status(200).json(response)
         }
     };
@@ -33,13 +32,11 @@ class TaskController {
 
     static save = async (req, res = response) => {
         try {
-            let insertedItem = await TaskQuery.create(req.body);
-            let response = Common.getStandardResponse(200, {savedId: insertedItem.id});
+            const insertedItem = await TaskQuery.create(req);
 
-            return res.status(200).json(response);
+            return res.status(200).json(insertedItem);
         } catch (error) {
-            let response = Common.getStandardResponse(500, error);
-            return res.status(200).json(response);
+            return res.status(500).json(error.message);
         }
     };
 
@@ -79,6 +76,16 @@ class TaskController {
 
             TaskQuery.assignTask(user, task);
 
+        } catch (error) {
+            return res.status(200).json({})
+        }
+    };
+
+    static assign = async (req, res = response) => {
+        try {
+            const {id} = await TaskQuery.assign(req.body);
+
+            return res.status(200).json(id)
         } catch (error) {
             return res.status(200).json({})
         }

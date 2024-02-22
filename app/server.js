@@ -33,7 +33,7 @@ class Server {
     routes(){
         this.app.use(this.baseRoute, require('../routes/taskRoutes'));
         this.app.use(this.baseRoute, require('../routes/userRoutes'));
-        this.app.use(this.baseRoute, require('../routes/authRoutes'));
+        // this.app.use(this.baseRoute, require('../routes/authRoutes'));
     }
 
     listen() {

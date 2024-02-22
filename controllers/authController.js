@@ -1,7 +1,6 @@
 const {Common} = require("../helpers/common");
 const UserQuery = require("../database/query/UserQuery");
 const {generarJWT} = require("../helpers/generate_jwt");
-const models = require("../models");
 
 class AuthController {
     static login = async (req, res) => {

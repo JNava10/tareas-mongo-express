@@ -1,23 +1,9 @@
-const app = express();
-const Router = require('express-group-router');
-const router = new Router();
 const middleware = require('../middlewares/middleware');
-const userController = require("../controllers/userController");
-const userValidation = require("../middlewares/validations/userValidation");
-const Validator = require("../helpers/validator");
-const {body} = require("express-validator");
-const {AuthController} = require("../controllers/authController");
-const express = require("express");
+const {Router } = require('express');
+const {UserController} = require("../controllers/userController");
+const router = Router();
 
-router.group('/user', [middleware.middleware], router => {
-    router.post('/', userController.createUser);
-    router.get('/', userController.listUser);
-    router.put('/', userController.modifyUser);
-    router.delete('/', userController.modifyUser);
-});
+router.post('/user',  UserController.save);
+// app.get('/task/:id',  TaskController.find);
 
-const listRoutes = router.init();
-
-app.use(listRoutes);
-
-module.exports = listRoutes;
+module.exports = router;

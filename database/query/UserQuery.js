@@ -3,19 +3,13 @@ const errorCodes = require('../../helpers/customErrorCodes')
 
 const createUser = async (req) =>  {
     try {
-        const createdUser = await UserModel.create(req.body, {aggregateErrors: true});
+        const createdUser = await UserModel.create(req.body);
 
-        return {inserted: true, item: createdUser}
+        return createdUser;
     } catch (error) {
-        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
-            inserted: false,
-            error: "Se ha intentado insertar un email duplicado."
-        }
+        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return "Se ha intentado insertar un email duplicado."
 
-        return {
-            inserted: false,
-            error: error.message
-        }
+        return error.message
     }
 }
 
@@ -68,5 +62,5 @@ const modifyUser = async (req) =>  {
 module.exports = {
     createUser,
     listUser,
-    modifyUser
+    modifyUser,
 }

@@ -83,10 +83,39 @@ const deleteTask = async (req) => {
     }
 }
 
+const assignTask = async (req) =>  {
+    try {
+        const {taskName, userEmail} = req.body;
+        const task = await TaskModel.findOne({name: req.body.taskName});
+        const user = await UserModel.findOne({email: req.body.userEmail});
+
+        if (!task) return "Tarea no encontrada.";
+        else if (!user) return "Usuario no encontrado.";
+
+        if (task.user !== null) return "Tarea ya asignada."
+
+        const updatedUser = await TaskModel.updateOne(
+            {name: taskName},
+            {userAssigned: userEmail},
+            { new: false }
+        );
+
+        if (!updatedUser) return false
+
+        return {item: updatedUser}
+    } catch (error) {
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
 
 module.exports = {
     createTask,
     modifyTask,
     deleteTask,
-    listTask
+    listTask,
+    assignTask
 }

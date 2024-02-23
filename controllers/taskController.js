@@ -63,9 +63,8 @@ class TaskController {
 
     static assign = async (req, res = response) => {
         try {
-            const { user, task } = req.body;
-
-            TaskQuery.assignTask(user, task);
+            const assigned = await TaskQuery.assignTask(req);
+            return res.status(200).json(assigned);
 
         } catch (error) {
             return res.status(200).json({})

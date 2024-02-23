@@ -16,16 +16,16 @@ const createUser = async (req) =>  {
 const listUser = async (req) =>  {
     try {
         const rows = await UserModel.find({email: req.body.email});
-        const findedUser = rows[0];
+        const foundUser = rows[0];
 
-        if (!findedUser) return false
+        if (!foundUser) return false
 
-        return {item: findedUser}
+        return {item: foundUser}
     } catch (error) {
-        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
-            inserted: false,
-            error: "Se ha intentado insertar un email duplicado."
-        }
+        // if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
+        //     inserted: false,
+        //     error: "Se ha intentado insertar un email duplicado."
+        // }
 
         return {
             inserted: false,
@@ -36,13 +36,15 @@ const listUser = async (req) =>  {
 
 const modifyUser = async (req) =>  {
     try {
-        const rows = await UserModel.updateOne(
+        const userExists = await listUser(req)
+
+        if (!userExists.item) return "Usuario no encontrado."
+
+        const updatedUser = await UserModel.updateOne(
             {email: req.body.email},
             req.body,
             { new: false }
         );
-
-        const updatedUser = rows[0]
 
         if (!updatedUser) return false
 
@@ -59,8 +61,38 @@ const modifyUser = async (req) =>  {
         }
     }
 }
+
+const deleteUser = async (req) => {
+    try {
+        const userExists = await listUser(req)
+
+        if (!userExists.item) return "Usuario no encontrado."
+
+        const deletedUser = await UserModel.deleteOne(
+            {email: req.body.email},
+            req.body,
+            { new: false }
+        );
+
+        if (!deletedUser) return false;
+
+        return {deleted: deletedUser.acknowledged};
+    } catch (error) {
+        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
+            inserted: false,
+            error: "Se ha intentado insertar un email duplicado."
+        }
+
+        return {
+            inserted: false,
+            error: error.message
+        }
+    }
+}
+
 module.exports = {
     createUser,
     listUser,
-    modifyUser,
+    deleteUser,
+    modifyUser
 }

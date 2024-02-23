@@ -1,26 +1,93 @@
 const Task = require('../../models/task');
 const {uniqueDuplicatedCode} = require("../../helpers/constants");
+const UserModel = require("../../models/user");
+const errorCodes = require("../../helpers/customErrorCodes");
+const TaskModel = require("../../models/task");
 
-const create = async (req, res) => {
+const createTask = async (req) =>  {
     try {
-        console.log(req.body)
-        return await Task.create(req.body);
-    } catch (error) {
-        console.log(error);
+        const createdTask = await TaskModel.create(req.body);
 
-        if (error.code === uniqueDuplicatedCode) return false
-        else return null
+        return createdTask;
+    } catch (error) {
+        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return "Ese nombre ya existe."
+
+        return error.message;
     }
 }
 
- const assign = async (req, res) => {
-     try {
-         return await UserTask.create(req.body);
-     } catch (error) {
-         if (error.code === uniqueDuplicatedCode) return false
-         else return null
-     }
- }
+const listTask = async (req) =>  {
+    try {
+        const rows = await UserModel.find({email: req.body.email});
+        const foundUser = rows[0];
+
+        if (!foundUser) return false
+
+        return {item: foundUser}
+    } catch (error) {
+        // if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
+        //     inserted: false,
+        //     error: "Se ha intentado insertar un email duplicado."
+        // }
+
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
+const modifyTask = async (req) =>  {
+    try {
+        const userExists = await listTask(req)
+
+        if (!userExists.item) return "Usuario no encontrado."
+
+        const updatedUser = await UserModel.updateOne(
+            {email: req.body.email},
+            req.body,
+            { new: false }
+        );
+
+        if (!updatedUser) return false
+
+        return {item: updatedUser}
+    } catch (error) {
+        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
+            inserted: false,
+            error: "Se ha intentado insertar un email duplicado."
+        }
+
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
+const deleteTask = async (req) => {
+    try {
+        const userExists = await listTask(req)
+
+        if (!userExists.item) return "Tarea no encontrada."
+
+        const deletedUser = await TaskModel.deleteOne(
+            {name: req.body.name},
+            req.body,
+            { new: false }
+        );
+
+        if (!deletedUser) return false;
+
+        return {deleted: deletedUser.acknowledged};
+    } catch (error) {
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
 
 module.exports = {
     create

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const collectionNames = require('../helpers/collectionNames');
 
 const taskSchema = new mongoose.Schema({
-    name: { type: String },
+    name: { type: String, unique: true },
     description: { type: String },
     difficulty: { type: String },
     plannedHours: { type: Number , default: 0  },
@@ -11,6 +11,6 @@ const taskSchema = new mongoose.Schema({
     ended: { type: Boolean, default: false },
 }, { collection: collectionNames.task , versionKey: false });
 
-const Task = mongoose.model('Task', taskSchema);
+const TaskModel = mongoose.model('Task', taskSchema);
 
-module.exports = Task;
+module.exports = TaskModel;

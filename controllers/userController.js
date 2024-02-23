@@ -43,19 +43,12 @@ class UserController {
 
     static modify = async (req, res = response) => {
         try {
-            req.body = await UserController.hashPasswordIfExists(req.body);
+            let itemUpdated = await UserQuery.modifyUser(req);
 
-            let itemUpdated = await UserQuery.modify(req.body);
-
-            let isUpdated = !itemUpdated.length < 1;
-
-            let response = Common.getStandardResponse(200, {updated: isUpdated});
-
-            return res.status(200).json(response);
+            return res.status(200).json({item: itemUpdated});
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
             console.log(error);
-            return res.status(200).json(response)
+            return res.status(200).json({error: error.message})
         }
     };
 
@@ -69,25 +62,12 @@ class UserController {
 
     static delete = async (req, res = response) => {
         try {
-            let user = await UserQuery.idExists(req.body.id);
+            let itemUpdated = await UserQuery.deleteUser(req);
 
-            console.log(user)
-
-            if (!user) {
-                return res.status(404).json(
-                    Common.getStandardResponse(404)
-                );
-            }
-
-            let itemDeleted =  await UserQuery.delete(req.body)
-            let isDeleted = itemDeleted === 1;
-
-            let response = Common.getStandardResponse(200, {itemDeleted: isDeleted});
-
-            return res.status(200).json(response);
+            return res.status(200).json(itemUpdated);
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
-            return res.status(200).json(response)
+            console.log(error);
+            return res.status(200).json({error: error.message})
         }
     };
 }

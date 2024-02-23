@@ -1,6 +1,7 @@
 const {response, request} = require('express');
 const {Common} = require("../helpers/common");
 const TaskQuery = require("../database/query/TaskQuery");
+const UserQuery = require("../database/query/UserQuery");
 
 class TaskController {
     static find = async (req, res = response) => {
@@ -40,20 +41,16 @@ class TaskController {
         }
     };
 
-    static modify = async (req, res = response) => {
-        try {
-            let itemUpdated = await TaskQuery.modify(req.body);
-            let isUpdated = !itemUpdated.length < 1;
-
-            let response = Common.getStandardResponse(200, {updated: isUpdated});
-
-            return res.status(200).json(response);
-        } catch (error) {
-            let response = Common.getStandardResponse(500, error)
-            console.log(error);
-            return res.status(200).json(response)
-        }
-    };
+    // static modify = async (req, res = response) => {
+    //     try {
+    //         let itemUpdated = await Ta.modifyUser(req.body);
+    //
+    //         return res.status(200).json({itemUpdated});
+    //     } catch (error) {
+    //         console.log(error);
+    //         return res.status(200).json({error: error.message})
+    //     }
+    // };
 
     static delete = async (req, res = response) => {
         try {

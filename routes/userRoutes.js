@@ -4,6 +4,8 @@ const {UserController} = require("../controllers/userController");
 const router = Router();
 
 router.post('/user',  UserController.save);
-// app.get('/task/:id',  TaskController.find);
+router.get('/user',  UserController.find);
+router.put('/user',  UserController.modify);
+router.delete('/user',  UserController.delete);
 
 module.exports = router;

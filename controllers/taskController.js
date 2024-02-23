@@ -6,34 +6,33 @@ const UserQuery = require("../database/query/UserQuery");
 class TaskController {
     static find = async (req, res = response) => {
         try {
-            return await TaskQuery.find(req.params.id);
+            return await TaskQuery.listTask(req);
         } catch (error) {
-            let response = Common.getStandardResponse(W500, error)
-            return res.status(200).json(response)
+            return res.status(200).json({error: error.message})
         }
     };
 
-    static findAll = async (req, res = response) => {
-        try {
-            let data = await TaskQuery.findAll();
-
-            // const response = Common.getStandardResponse(200, data)
-            return res.status(200).json({data: data})
-        } catch (error) {
-            console.log(error);
-
-            const data = {
-                error:  error.message
-            }
-
-            const response = Common.getStandardResponse(500, data)
-            return res.status(200).json(response)
-        }
-    };
+    // static findAll = async (req, res = response) => {
+    //     try {
+    //         let data = await TaskQuery.findAll();
+    //
+    //         // const response = Common.getStandardResponse(200, data)
+    //         return res.status(200).json({data: data})
+    //     } catch (error) {
+    //         console.log(error);
+    //
+    //         const data = {
+    //             error:  error.message
+    //         }
+    //
+    //         const response = Common.getStandardResponse(500, data)
+    //         return res.status(200).json(response)
+    //     }
+    // };
 
     static save = async (req, res = response) => {
         try {
-            const insertedItem = await TaskQuery.create(req);
+            const insertedItem = await TaskQuery.createTask(req);
 
             return res.status(200).json(insertedItem);
         } catch (error) {
@@ -41,28 +40,23 @@ class TaskController {
         }
     };
 
-    // static modify = async (req, res = response) => {
-    //     try {
-    //         let itemUpdated = await Ta.modifyUser(req.body);
-    //
-    //         return res.status(200).json({itemUpdated});
-    //     } catch (error) {
-    //         console.log(error);
-    //         return res.status(200).json({error: error.message})
-    //     }
-    // };
+    static modify = async (req, res = response) => {
+        try {
+            const itemUpdated = await TaskQuery.modifyTask(req);
+
+            return res.status(200).json(itemUpdated);
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({error: error.message})
+        }
+    };
 
     static delete = async (req, res = response) => {
         try {
-            let itemDeleted =  await TaskQuery.delete(req.body)
-            let isDeleted = itemDeleted === 1;
-
-            let response = Common.getStandardResponse(200, {itemDeleted: isDeleted});
-
-            return res.status(200).json(response);
+            let itemDeleted =  await TaskQuery.deleteTask(req);
+            return res.status(200).json(itemDeleted);
         } catch (error) {
-            let response = Common.getStandardResponse(500, error)
-            return res.status(200).json(response)
+            return res.status(200).json({error: error.message})
         }
     };
 
@@ -73,16 +67,6 @@ class TaskController {
 
             TaskQuery.assignTask(user, task);
 
-        } catch (error) {
-            return res.status(200).json({})
-        }
-    };
-
-    static assign = async (req, res = response) => {
-        try {
-            const {id} = await TaskQuery.assign(req.body);
-
-            return res.status(200).json(id)
         } catch (error) {
             return res.status(200).json({})
         }

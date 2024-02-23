@@ -18,7 +18,7 @@ const createTask = async (req) =>  {
 
 const listTask = async (req) =>  {
     try {
-        const rows = await UserModel.find({email: req.body.email});
+        const rows = await TaskModel.find({name: req.body.name});
         const foundUser = rows[0];
 
         if (!foundUser) return false
@@ -41,10 +41,10 @@ const modifyTask = async (req) =>  {
     try {
         const userExists = await listTask(req)
 
-        if (!userExists.item) return "Usuario no encontrado."
+        if (!userExists.item) return "Tarea no encontrada."
 
-        const updatedUser = await UserModel.updateOne(
-            {email: req.body.email},
+        const updatedUser = await TaskModel.updateOne(
+            {name: req.body.name},
             req.body,
             { new: false }
         );
@@ -53,11 +53,6 @@ const modifyTask = async (req) =>  {
 
         return {item: updatedUser}
     } catch (error) {
-        if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
-            inserted: false,
-            error: "Se ha intentado insertar un email duplicado."
-        }
-
         return {
             executed: false,
             error: error.message
@@ -90,5 +85,8 @@ const deleteTask = async (req) => {
 
 
 module.exports = {
-    create
+    createTask,
+    modifyTask,
+    deleteTask,
+    listTask
 }

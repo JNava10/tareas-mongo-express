@@ -47,27 +47,47 @@ class TaskController {
             return res.status(200).json(itemUpdated);
         } catch (error) {
             console.log(error);
-            return res.status(200).json({error: error.message})
+            return res.status(500).json({error: error.message})
         }
     };
 
     static delete = async (req, res = response) => {
         try {
             let itemDeleted =  await TaskQuery.deleteTask(req);
+
             return res.status(200).json(itemDeleted);
         } catch (error) {
-            return res.status(200).json({error: error.message})
+            return res.status(500).json({error: error.message})
         }
     };
-
 
     static assign = async (req, res = response) => {
         try {
             const assigned = await TaskQuery.assignTask(req);
-            return res.status(200).json(assigned);
 
+            return res.status(200).json(assigned);
         } catch (error) {
-            return res.status(200).json({})
+            return res.status(500).json({error: error.message});
+        }
+    };
+
+    static changeProgress = async (req, res = response) => {
+        try {
+            const updated = await TaskQuery.changeProgress(req);
+
+            return res.status(200).json(updated);
+        } catch (error) {
+            return res.status(500).json({error: error.message})
+        }
+    };
+
+    static getPendingTasks = async (req, res = response) => {
+        try {
+            const updated = await TaskQuery.pendingTasks(req);
+
+            return res.status(200).json(updated);
+        } catch (error) {
+            return res.status(500).json({error: error.message});
         }
     };
 }

@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 const collectionNames = require('../helpers/collectionNames');
 
 const userSchema = new mongoose.Schema({
-    email: { type: String, unique: true },
-    password: { type: String },
-    name: { type: String },
+    email: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    name: { type: String, required: true },
     surname: { type: String },
     secondSurname: { type: String },
+    realizedTasks: { type: Number, default: 0 },
 }, { collection: collectionNames.user , versionKey: false });
 
 const UserModel = mongoose.model('User', userSchema);

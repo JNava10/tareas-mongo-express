@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 
 class UserController {
     static find = async (req, res = response) => {
-        const user = await UserQuery.find(req.params.id);
+        const user = await UserQuery.listUser(req.params.id);
 
         if (!user) {
             return res.status(404).json(
@@ -69,6 +69,14 @@ class UserController {
             console.log(error);
             return res.status(200).json({error: error.message})
         }
+    };
+
+    static getRanking = async (req, res = response) => {
+        const user = await UserQuery.getRanking(req);
+
+        if (!user) return res.status(404).json({});
+
+        return res.status(200).json(user);
     };
 }
 

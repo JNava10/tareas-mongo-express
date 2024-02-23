@@ -25,11 +25,6 @@ const listTask = async (req) =>  {
 
         return {item: foundUser}
     } catch (error) {
-        // if (error.code === errorCodes.DUPLICATE_KEY_ERROR) return {
-        //     inserted: false,
-        //     error: "Se ha intentado insertar un email duplicado."
-        // }
-
         return {
             executed: false,
             error: error.message
@@ -94,15 +89,61 @@ const assignTask = async (req) =>  {
 
         if (task.user !== null) return "Tarea ya asignada."
 
-        const updatedUser = await TaskModel.updateOne(
+        const updatedTask = await TaskModel.updateOne(
             {name: taskName},
             {userAssigned: userEmail},
             { new: false }
         );
 
-        if (!updatedUser) return false
+        if (!updatedTask) return false
 
-        return {item: updatedUser}
+        return {item: updatedTask}
+    } catch (error) {
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
+const changeProgress = async (req) =>  {
+    try {
+        const {progress, taskName} = req.body;
+        const task = await TaskModel.findOne({name: taskName});
+
+        console.log(progress);
+
+        if (!task) return "Tarea no encontrada.";
+
+        const updatedTask = await TaskModel.updateOne(
+            {name: taskName},
+            {realizedPercentage: progress},
+            { new: false }
+        );
+
+        if (!updatedTask) return false;
+
+        return {item: updatedTask}
+    } catch (error) {
+        return {
+            executed: false,
+            error: error.message
+        }
+    }
+}
+
+const pendingTasks = async (req) =>  {
+    try {
+        const user = await UserModel.findOne({email: req.body.email});
+
+        if (!user) return "Usuario no encontrado.";
+
+        const rows = await TaskModel.find({
+            userAssigned: req.body.email,
+            ended: false
+        }).count();
+
+        return {item: rows}
     } catch (error) {
         return {
             executed: false,
@@ -117,5 +158,7 @@ module.exports = {
     modifyTask,
     deleteTask,
     listTask,
-    assignTask
+    assignTask,
+    changeProgress,
+    pendingTasks
 }
